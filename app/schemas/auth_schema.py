@@ -13,3 +13,10 @@ class RegisterUserResponse(BaseModel):
     phone: str = Field(min_length=10, max_length=15)
 
 
+class LoginUser(BaseModel):
+    email: EmailStr
+    password: str
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str
