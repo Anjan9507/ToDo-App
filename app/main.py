@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routes import task_route
+from app.routes import task_route, auth_route
 
 app = FastAPI()
 
@@ -9,4 +9,5 @@ def root():
 
 
 app.include_router(task_route.router)
+app.include_router(auth_route.router)
 
