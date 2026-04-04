@@ -217,8 +217,10 @@ def reset_password(db, data):
         hashed_pwd = hash_password(data.new_password)
 
         cursor.execute("UPDATE users SET pwd_hash = %s WHERE id = %s", (hashed_pwd, user_id))
+        cursor.execute("DELETE FROM refresh_tokens WHERE user_id = %s", (user_id,))
 
         cursor.execute("UPDATE pwd_reset_tokens SET used = TRUE WHERE token = %s", (data.token,))
+        cursor.execute("DELETE FROM pwd_reset_tokens WHERE user_id = %s", (user_id,))
 
         db.commit()
 
@@ -228,4 +230,16 @@ def reset_password(db, data):
         raise e
     finally:
         cursor.close()
-        
+
+
+def remove_refresh_token(db, refresh_token):
+    cursor = db.cursor()
+    try:
+        cursor.execute("DELETE FROM refresh_tokens WHERE token = %s", (refresh_token,))
+
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        raise e
+    finally:
+        cursor.close()

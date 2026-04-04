@@ -11,7 +11,7 @@ def user_register(data: RegisterUser, db=Depends(get_db)):
 
 
 @router.post("/login", response_model=TokenResponse, status_code=status.HTTP_200_OK)
-def user_login(request: Request, response: Response, data: LoginUser, db=Depends(get_db)):
+def user_login(response: Response, data: LoginUser, db=Depends(get_db)):
     try:
         token_data = auth_service.login_user(db, data)
         if not token_data:
@@ -67,3 +67,20 @@ def forgot_password(data: ForgotPassword, db=Depends(get_db)):
 @router.post("/reset-password", status_code=status.HTTP_200_OK)
 def reset_password(data: ResetPassword, db=Depends(get_db)):
     return auth_service.reset_password(db, data)
+
+
+@router.post("/logout", status_code=status.HTTP_200_OK)
+def logout(request: Request, response: Response, db=Depends(get_db)):
+    refresh_token = request.cookies.get("refresh_token")
+
+    if refresh_token:
+        auth_service.remove_refresh_token(db, refresh_token)
+
+    response.delete_cookie(
+        key="refresh_token",
+        httponly=True,
+        secure=True,
+        samesite="lax"
+    )
+
+    return {"message": "Logged out successfully"}
