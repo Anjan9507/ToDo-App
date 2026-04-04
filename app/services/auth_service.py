@@ -2,6 +2,7 @@ from passlib.context import CryptContext
 from fastapi import HTTPException
 from psycopg2 import errors
 from app.utils import format_phn_number
+import secrets
 
 from jose import jwt
 from datetime import datetime, timedelta
@@ -27,6 +28,10 @@ def hash_password(password: str) -> str:
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
+
+
+def generate_refresh_token():
+    return secrets.token_hex(32)
 
 
 def create_user(db, data):
@@ -95,6 +100,60 @@ def login_user(db, data):
             "email": email
         })
 
+        refresh_token = generate_refresh_token()
+
+        cursor.execute("INSERT INTO refresh_tokens (user_id, token, expires_at) VALUES (%s, %s, NOW() + INTERVAL '10 days')", (user_id, refresh_token))
+
+        db.commit()
+
+        return {
+            "access_token": access_token,
+            "refresh_token": refresh_token,
+            "token_type": "bearer"
+        }
+    except Exception as e:
+        db.rollback()
+        raise e
+    finally:
+        cursor.close()
+
+
+def new_access_token(db, refresh_token: str):
+    cursor = db.cursor()
+    try:
+        cursor.execute(
+             """SELECT
+                    user_id
+                FROM refresh_tokens
+                WHERE token = %s
+                AND expires_at > NOW()
+            """, (refresh_token,))
+        
+        token_data = cursor.fetchone()
+        if not token_data:
+            raise HTTPException(
+                status_code=401,
+                detail="Invalid Refresh Token"
+            )
+        
+        user_id = token_data[0]
+
+        cursor.execute("SELECT email FROM users WHERE id = %s", (user_id,))
+
+        user_data = cursor.fetchone()
+        if not user_data:
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid Request"
+            )
+        
+        email = user_data[0]
+        
+        access_token = create_access_token({
+            "user_id": user_id,
+            "email": email
+        })
+
         return {
             "access_token": access_token,
             "token_type": "bearer"
@@ -104,5 +163,3 @@ def login_user(db, data):
         raise e
     finally:
         cursor.close()
-    
-

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, HTTPException, status, Response, Request
 from app.schemas.auth_schema import RegisterUser, RegisterUserResponse, LoginUser, TokenResponse
 from app.services import auth_service
 from app.database.db import get_db
@@ -11,5 +11,50 @@ def user_register(data: RegisterUser, db=Depends(get_db)):
 
 
 @router.post("/login", response_model=TokenResponse, status_code=status.HTTP_200_OK)
-def user_login(data: LoginUser, db=Depends(get_db)):
-    return auth_service.login_user(db, data)
+def user_login(request: Request, response: Response, data: LoginUser, db=Depends(get_db)):
+    try:
+        token_data = auth_service.login_user(db, data)
+        if not token_data:
+            raise HTTPException(
+                status_code=401,
+                detail="Invalid Credentials"
+            )
+        
+        response.set_cookie(
+            key="refresh_token",
+            value=token_data["refresh_token"],
+            httponly=True,
+            secure=True,
+            samesite="lax",
+            max_age=10*24*60*60
+        )
+
+        return {
+            "access_token": token_data["access_token"],
+            "token_type": "bearer"
+        }
+    except Exception as e:
+        raise e
+
+
+@router.post("/refresh", status_code=status.HTTP_200_OK)
+def create_new_access_token(request: Request, db=Depends(get_db)):
+    try:
+        refresh_token = request.cookies.get("refresh_token")
+        if not refresh_token:
+            raise HTTPException(
+                status_code=401,
+                detail="Refresh Token missing"
+            )
+        
+        new_access_token = auth_service.new_access_token(db, refresh_token)
+        if not new_access_token:
+            raise HTTPException(
+                status_code=401,
+                detail="Invalid Refresh token"
+            )
+        
+        return new_access_token
+    except Exception as e:
+        raise e
+    
