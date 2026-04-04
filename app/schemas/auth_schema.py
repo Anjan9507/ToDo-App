@@ -26,3 +26,9 @@ class TokenResponse(BaseModel):
 
 class ForgotPassword(BaseModel):
     email: EmailStr
+
+
+
+class ResetPassword(BaseModel):
+    token: str
+    new_password: str = Field(min_length=8)

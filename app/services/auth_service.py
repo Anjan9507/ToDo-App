@@ -198,3 +198,34 @@ def forgot_password(db, data):
     finally:
         cursor.close()
 
+
+def reset_password(db, data):
+    cursor = db.cursor()
+    try:
+        cursor.execute("SELECT user_id FROM pwd_reset_tokens WHERE token = %s AND expires_at > NOW() AND used = FALSE", 
+                       (data.token,))
+        
+        row = cursor.fetchone()
+        if not row:
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid or expired token"
+            )
+        
+        user_id = row[0]
+
+        hashed_pwd = hash_password(data.new_password)
+
+        cursor.execute("UPDATE users SET pwd_hash = %s WHERE id = %s", (hashed_pwd, user_id))
+
+        cursor.execute("UPDATE pwd_reset_tokens SET used = TRUE WHERE token = %s", (data.token,))
+
+        db.commit()
+
+        return {"message": "Password reset successfull"}
+    except Exception as e:
+        db.rollback()
+        raise e
+    finally:
+        cursor.close()
+        
