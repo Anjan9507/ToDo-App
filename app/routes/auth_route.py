@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Response, Request
-from app.schemas.auth_schema import RegisterUser, RegisterUserResponse, LoginUser, TokenResponse
+from app.schemas.auth_schema import RegisterUser, RegisterUserResponse, LoginUser, TokenResponse, ForgotPassword
 from app.services import auth_service
 from app.database.db import get_db
 
@@ -58,3 +58,7 @@ def create_new_access_token(request: Request, db=Depends(get_db)):
     except Exception as e:
         raise e
     
+
+@router.post("/forgot-password", status_code=status.HTTP_200_OK)
+def forgot_password(data: ForgotPassword, db=Depends(get_db)):
+    return auth_service.forgot_password(db, data)

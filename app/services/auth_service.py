@@ -5,7 +5,7 @@ from app.utils import format_phn_number
 import secrets
 
 from jose import jwt
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from app.config import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
 
 def create_access_token(data: dict):
@@ -100,6 +100,8 @@ def login_user(db, data):
             "email": email
         })
 
+        cursor.execute("DELETE FROM refresh_tokens WHERE user_id = %s", (user_id,))
+
         refresh_token = generate_refresh_token()
 
         cursor.execute("INSERT INTO refresh_tokens (user_id, token, expires_at) VALUES (%s, %s, NOW() + INTERVAL '10 days')", (user_id, refresh_token))
@@ -163,3 +165,36 @@ def new_access_token(db, refresh_token: str):
         raise e
     finally:
         cursor.close()
+
+
+def forgot_password(db, data):
+    cursor = db.cursor()
+    try:
+        cursor.execute("SELECT id FROM users WHERE email = %s", (data.email,))
+
+        user = cursor.fetchone()
+        if not user:
+            return {"message": "If account exists, reset link has been sent"}
+        
+        user_id = user[0]
+
+        cursor.execute("DELETE FROM pwd_reset_tokens WHERE user_id = %s", (user_id,))
+
+        reset_token = secrets.token_urlsafe(32)
+        expires_at = datetime.now(timezone.utc) + timedelta(minutes=15)
+
+        cursor.execute("INSERT INTO pwd_reset_tokens (user_id, token, expires_at) VALUES (%s, %s, %s)", 
+                       (user_id, reset_token, expires_at))
+        
+        db.commit()
+
+        return {
+            "message": "If account exists, password reset token generated",
+            "reset_token": reset_token
+        }
+    except Exception as e:
+        db.rollback()
+        raise e
+    finally:
+        cursor.close()
+
