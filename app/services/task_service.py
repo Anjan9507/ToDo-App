@@ -1,8 +1,15 @@
 from fastapi import HTTPException
 
+def update_overdue_tasks(db, user_id: int):
+    with db.cursor() as cursor:
+        cursor.execute("UPDATE tasks SET status = 'overdue' WHERE user_id = %s AND due_date < NOW() AND status = 'pending'",
+                       (user_id,))
+
+
 def get_tasks(db, user_id: int):
     cursor = db.cursor()
     try:
+        update_overdue_tasks(db, user_id)
         cursor.execute(
              """SELECT 
                     id, title, description, status, due_date 
@@ -40,6 +47,7 @@ def get_tasks(db, user_id: int):
 def get_pending_tasks(db, user_id: int):
     cursor = db.cursor()
     try:
+        update_overdue_tasks(db, user_id)
         cursor.execute(
              """SELECT
                     id, title, description, status, due_date
@@ -78,6 +86,7 @@ def get_pending_tasks(db, user_id: int):
 def get_completed_tasks(db, user_id: int):
     cursor = db.cursor()
     try:
+        update_overdue_tasks(db, user_id)
         cursor.execute(
              """SELECT
                     id, title, description, status, due_date
@@ -116,6 +125,7 @@ def get_completed_tasks(db, user_id: int):
 def get_overdue_tasks(db, user_id: int):
     cursor = db.cursor()
     try:
+        update_overdue_tasks(db, user_id)
         cursor.execute(
              """SELECT
                     id, title, description, status, due_date
@@ -154,6 +164,7 @@ def get_overdue_tasks(db, user_id: int):
 def search_tasks(db, user_id: int, task_title: str):
     cursor = db.cursor()
     try:
+        update_overdue_tasks(db, user_id)
         cursor.execute(
              """SELECT
                     id, title, description, status, due_date
