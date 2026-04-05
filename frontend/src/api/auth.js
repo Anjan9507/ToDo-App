@@ -15,4 +15,13 @@ export const loginUser = async (email, password) => {
     }
 }
 
+export const logoutUser = async () => {
+    try {
+        await api.post("/logout")
+    } catch (err) {
+        console.error("Logout failed")
+    }
+}
+
+
 
