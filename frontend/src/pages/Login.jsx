@@ -9,6 +9,9 @@ function Login() {
 	const [email, setEmail] = useState("")
 	const [password, setPassword] = useState("")
 
+	const [error, setError] = useState("")
+	const [loading, setLoading] = useState(false)
+
 	const token = localStorage.getItem("access_token")
 	if (token) {
 		return <Navigate to="/dashboard" />
@@ -17,16 +20,19 @@ function Login() {
 	const handleSubmit = async (e) => {
 		e.preventDefault()
 
+		setError("")
+		setLoading(true)
+
 		try {
 			const data = await loginUser(email, password)
 
 			localStorage.setItem("access_token", data.access_token)
 
-			console.log("Login Sucess")
-
 			navigate("/dashboard")
 		} catch (err) {
-			console.error(err.message)
+			setError(err.message)
+		} finally {
+			setLoading(false)
 		}
 	}
 
@@ -51,8 +57,10 @@ function Login() {
 					required
 				/>
 
-				<button type="submit">
-					Login
+				{error && <p className="error">{error}</p>}
+
+				<button type="submit" disabled={loading}>
+					{loading ? "Logging in..." : "Login"}
 				</button>
 			</form>
 		</div>
