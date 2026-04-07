@@ -1,27 +1,23 @@
-import { useNavigate } from "react-router-dom"
-import { logoutUser } from "../api/auth"
+import Layout from "../components/Layout"
+import "./Dashboard.css"
 
 function Dashboard() {
-	const navigate = useNavigate()
-
-	const handleLogout = async () => {
-		await logoutUser()
-
-		localStorage.removeItem("access_token")
-		
-		navigate("/login")
-	}
-
 	return (
-		<div style={{ color: "white", padding: "20px" }}>
-			<h1>Dashboard</h1>
+		<Layout>
+			<div className="dashboard-container">
 
-			<p>Welcome! You are logged in</p>
+				<div className="card">
+					<h1>Dashboard</h1>
+					<p>Welcome! You are logged in</p>
+				</div>
 
-			<button onClick={handleLogout}>
-				Logout
-			</button>
-		</div>
+				<div className="card">
+					<h2>Your Tasks</h2>
+					<p>No tasks yet. Start adding tasks</p>
+				</div>
+			</div>
+		</Layout>
+
 	)
 }
 
