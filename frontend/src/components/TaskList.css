@@ -43,6 +43,12 @@
   border-radius: 6px;
   font-size: 12px;
   text-transform: capitalize;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.status:hover {
+  transform: scale(1.05);
 }
 
 .status.pending {
@@ -55,4 +61,24 @@
 
 .status.overdue {
   background: #ef4444;
+}
+
+.task-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.delete-btn {
+  background: #ef4444;
+  border: none;
+  padding: 4px 10px;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.delete-btn:hover {
+  background: #dc2626;
 }

@@ -191,7 +191,7 @@ def insert_tasks(db, user_id: int, data):
     cursor = db.cursor()
     try:
         cursor.execute("""INSERT INTO tasks (user_id, title, description, due_date) VALUES (%s, %s, %s, %s) 
-                       RETURNING id, title, description, due_date
+                       RETURNING id, title, description, status, due_date
                        """, (user_id, data.title, data.description, data.due_date))
         
         row = cursor.fetchone()
@@ -208,7 +208,8 @@ def insert_tasks(db, user_id: int, data):
             "id": row[0],
             "title": row[1],
             "description": row[2],
-            "due_date": row[3]
+            "status": row[3],
+            "due_date": row[4]
         }
     except Exception as e:
         db.rollback()

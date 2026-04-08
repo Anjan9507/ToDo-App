@@ -1,8 +1,19 @@
 import "./TaskList.css"
+import { updateTask } from "../api/tasks"
 
-function TaskList({ tasks }) {
+function TaskList({ tasks, onDelete, onUpdate }) {
 	if (!tasks.length) {
 		return <p className="empty">No tasks yet.</p>
+	}
+
+	const toggleStatus = async (task) => {
+		const newStatus = task.status === "completed" ? "pending" : "completed"
+
+		const updatedTask = await updateTask(task.id, {
+			...task,
+			status: newStatus
+		})
+		onUpdate(updatedTask)
 	}
 
 	return (
@@ -14,14 +25,27 @@ function TaskList({ tasks }) {
 					<div className="task-header">
 						<h4>{task.title}</h4>
 
-						<span className={`status ${task.status}`}>
-							{task.status}
-						</span>
+						<div className="task-actions">
+
+							<span
+								className={`status ${task.status}`}
+								onClick={() => toggleStatus(task)}
+							>
+								{task.status}
+							</span>
+
+							<button
+								className="delete-btn"
+								onClick={() => onDelete(task.id)}
+							>
+								Delete
+							</button>
+
+						</div>
+
 					</div>
 
-					<p className="task-desc">
-						{task.description}
-					</p>
+					<p className="task-desc">{task.description}</p>
 
 					<p className="task-date">
 						Due: {new Date(task.due_date).toLocaleDateString()}

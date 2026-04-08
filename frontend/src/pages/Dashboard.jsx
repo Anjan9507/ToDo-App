@@ -2,14 +2,14 @@ import { useEffect, useState } from "react"
 import Layout from "../components/Layout"
 import AddTask from "../components/AddTask"
 import TaskList from "../components/TaskList"
-import { getTasks } from "../api/tasks"
+import { getTasks, deleteTask } from "../api/tasks"
 import "./Dashboard.css"
 
 function Dashboard() {
 	const [tasks, setTasks] = useState([])
 
 	const [error, setError] = useState("")
-	
+
 	useEffect(() => {
 		loadTasks()
 	}, [])
@@ -18,13 +18,28 @@ function Dashboard() {
 		try {
 			const data = await getTasks()
 			setTasks(data)
-		} catch(err) {
+		} catch (err) {
 			setError("Failed to load tasks")
 		}
 	}
 
 	const handleTaskAdded = (task) => {
 		setTasks(prev => [task, ...prev])
+	}
+
+	const handleDelete = async (id) => {
+		try {
+			await deleteTask(id)
+
+			setTasks(prev => prev.filter(task => task.id !== id))
+
+		} catch (err) {
+			setError("Failed to delete task")
+		}
+	}
+
+	const handleUpdate = (updatedTask) => {
+		setTasks(prev => prev.map(task => task.id === updatedTask.id ? updatedTask : task))
 	}
 
 	return (
@@ -36,14 +51,14 @@ function Dashboard() {
 					<p>Welcome! You are logged in</p>
 				</div>
 
-				{error && <p style={{color: "#ef4444"}}>{error}</p>}
+				{error && <p style={{ color: "#ef4444" }}>{error}</p>}
 
 				<div className="card">
 					<h2>Your Tasks</h2>
 
-					<AddTask  onTaskAdded={handleTaskAdded} />
+					<AddTask onTaskAdded={handleTaskAdded} />
 
-					<TaskList tasks={tasks} />
+					<TaskList tasks={tasks} onDelete={handleDelete} onUpdate={handleUpdate} />
 				</div>
 			</div>
 		</Layout>
