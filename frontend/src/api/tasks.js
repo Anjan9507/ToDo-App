@@ -5,6 +5,21 @@ export const getTasks = async () => {
     return response.data
 }
 
+export const getPendingTasks = async () => {
+  const response = await api.get("/tasks/pending")
+  return response.data
+}
+
+export const getCompletedTasks = async () => {
+  const response = await api.get("/tasks/completed")
+  return response.data
+}
+
+export const getOverdueTasks = async () => {
+  const response = await api.get("/tasks/overdue")
+  return response.data
+}
+
 export const createTask = async (task) => {
     const response = await api.post("/tasks/add", task)
     return response.data
