@@ -20,10 +20,7 @@ def get_tasks(db, user_id: int):
         rows = cursor.fetchall()
 
         if not rows:
-            raise HTTPException(
-                status_code=404,
-                detail="Tasks not found"
-            )
+            return []
         
         tasks = []
 
@@ -59,10 +56,7 @@ def get_pending_tasks(db, user_id: int):
         rows = cursor.fetchall()
 
         if not rows:
-            raise HTTPException(
-                status_code=404,
-                detail="No pending tasks found"
-            )
+            return []
         
         tasks = []
 
@@ -98,10 +92,7 @@ def get_completed_tasks(db, user_id: int):
         rows = cursor.fetchall()
 
         if not rows:
-            raise HTTPException(
-                status_code=404,
-                detail="No completed tasks found"
-            )
+            return []
         
         tasks = []
 
@@ -137,10 +128,7 @@ def get_overdue_tasks(db, user_id: int):
         rows = cursor.fetchall()
 
         if not rows:
-            raise HTTPException(
-                status_code=404,
-                detail="No overdue tasks found"
-            )
+            return []
         
         tasks = []
 
@@ -175,6 +163,9 @@ def search_tasks(db, user_id: int, task_title: str):
             """, (user_id, f"%{task_title}%", f"%{task_title}%"))
         
         rows = cursor.fetchall()
+
+        if not rows:
+            return []
         
         tasks = []
 
