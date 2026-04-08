@@ -34,3 +34,8 @@ export const updateTask = async (id, taskData) => {
     const response = await api.put(`/tasks/update/${id}`, taskData)
     return response.data
 }
+
+export const searchTasks = async (query) => {
+    const response = await api.get(`/tasks/search?task_title=${query}`)
+    return response.data
+}

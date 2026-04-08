@@ -7,6 +7,8 @@ function AddTask({ onTaskAdded }) {
 	const [description, setDescription] = useState("")
 	const [dueDate, setDueDate] = useState("")
 
+	const [error, setError] = useState("")
+
 	const handleSubmit = async (e) => {
 		e.preventDefault()
 
@@ -24,7 +26,10 @@ function AddTask({ onTaskAdded }) {
 			setDueDate("")
 
 		} catch (err) {
-				console.error(err)
+				setError("Failed to add task")
+				setTimeout(() => {
+					setError("")
+				}, 3000)
 		}
 	}
 
@@ -55,6 +60,8 @@ function AddTask({ onTaskAdded }) {
 			<button type="submit">
 				Add Task
 			</button>
+
+			{error && <p style={{ color: "#ef4444" }}>{error}</p>}
 		</form>
 	)
 }

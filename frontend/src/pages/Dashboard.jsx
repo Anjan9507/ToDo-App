@@ -2,8 +2,9 @@ import { useEffect, useState } from "react"
 import Layout from "../components/Layout"
 import AddTask from "../components/AddTask"
 import TaskList from "../components/TaskList"
-import { getTasks, deleteTask, getPendingTasks, getOverdueTasks, getCompletedTasks } from "../api/tasks"
+import { getTasks, deleteTask, getPendingTasks, getOverdueTasks, getCompletedTasks, searchTasks } from "../api/tasks"
 import "./Dashboard.css"
+import EditTaskModal from "../components/EditTaskModal"
 
 function Dashboard() {
 	const [tasks, setTasks] = useState([])
@@ -12,9 +13,31 @@ function Dashboard() {
 
 	const [error, setError] = useState("")
 
+	const [search, setSearch] = useState("")
+
+	const [editingTask, setEditingTask] = useState(null)
+
 	useEffect(() => {
 		loadTasks()
 	}, [])
+
+	useEffect(() => {
+		const delayDebounce = setTimeout(async () => {
+			if(search.trim() === "") {
+				loadTasks(filter)
+				return
+			}
+
+			try {
+				const data = await searchTasks(search)
+				setTasks(data)
+			} catch (err) {
+				setError("Search Failed")
+			}
+		}, 400)
+
+		return () => clearTimeout(delayDebounce)
+	}, [search])
 
 	const loadTasks = async (selectedFilter = "all") => {
 		try {
@@ -57,6 +80,10 @@ function Dashboard() {
 		setTasks(prev => prev.map(task => task.id === updatedTask.id ? updatedTask : task))
 	}
 
+	const handleEdit = (task) => {
+		setEditingTask(task)
+	}
+
 	return (
 		<Layout>
 			<div className="dashboard-container">
@@ -67,6 +94,14 @@ function Dashboard() {
 				</div>
 
 				{error && <p style={{ color: "#ef4444" }}>{error}</p>}
+
+				<input 
+					type="text"
+					placeholder="Search tasks..." 
+					className="task-search"
+					value={search}
+					onChange={(e) => setSearch(e.target.value)}
+				/>
 
 				<div className="task-filters">
 
@@ -97,7 +132,6 @@ function Dashboard() {
 					>
 						Overdue
 					</button>
-
 				</div>
 
 				<div className="card">
@@ -105,8 +139,21 @@ function Dashboard() {
 
 					<AddTask onTaskAdded={handleTaskAdded} />
 
-					<TaskList tasks={tasks} onDelete={handleDelete} onUpdate={handleUpdate} />
+					<TaskList 
+						tasks={tasks} 
+						onDelete={handleDelete} 
+						onUpdate={handleUpdate} 
+						onEdit={handleEdit}
+					/>
 				</div>
+
+				{editingTask && (
+					<EditTaskModal 
+						task={editingTask}
+						onClose={() => setEditingTask(null)}
+						onUpdate={handleUpdate}
+					/>
+				)}
 			</div>
 		</Layout>
 

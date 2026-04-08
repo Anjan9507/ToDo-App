@@ -1,7 +1,7 @@
 .dashboard-container {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 15px;
 }
 
 .card {
@@ -42,4 +42,18 @@
 .task-filters button.active {
   background: #22c55e;
   border-color: #22c55e;
+}
+
+.task-search {
+  width: 100%;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  background: #0f172a;
+  border: 1px solid #334155;
+  color: white;
+  border-radius: 6px;
+}
+
+.task-search::placeholder {
+  color: #64748b;
 }

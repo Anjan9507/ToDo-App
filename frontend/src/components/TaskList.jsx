@@ -1,9 +1,9 @@
 import "./TaskList.css"
 import { updateTask } from "../api/tasks"
 
-function TaskList({ tasks, onDelete, onUpdate }) {
+function TaskList({ tasks, onDelete, onUpdate, onEdit }) {
 	if (!tasks.length) {
-		return <p className="empty">No tasks yet.</p>
+		return <p className="empty">No tasks found.</p>
 	}
 
 	const toggleStatus = async (task) => {
@@ -33,6 +33,10 @@ function TaskList({ tasks, onDelete, onUpdate }) {
 							>
 								{task.status}
 							</span>
+
+							<button className="edit-btn" onClick={() => onEdit(task)}>
+								Edit
+							</button>
 
 							<button
 								className="delete-btn"
