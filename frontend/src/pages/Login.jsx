@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useNavigate, Navigate } from "react-router-dom"
+import { useNavigate, Navigate, Link } from "react-router-dom"
 import { loginUser } from "../api/auth"
 import toast from "react-hot-toast"
 import "./Login.css"
@@ -61,6 +61,10 @@ function Login() {
 				<button type="submit" disabled={loading}>
 					{loading ? "Logging in..." : "Login"}
 				</button>
+
+				<p className="auth-link">
+					Don't have an account? <Link to="/register">Register</Link>
+				</p>
 			</form>
 		</div>
 	)

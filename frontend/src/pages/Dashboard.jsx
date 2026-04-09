@@ -93,7 +93,6 @@ function Dashboard() {
 
 				<div className="card">
 					<h1>Dashboard</h1>
-					<p>Welcome! You are logged in</p>
 				</div>
 
 				{error && <p style={{ color: "#ef4444" }}>{error}</p>}
