@@ -19,7 +19,9 @@
   border-radius:10px;
   width:350px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  animation: 0.2s ease;
 }
+
 
 .modal input,
 .modal select{

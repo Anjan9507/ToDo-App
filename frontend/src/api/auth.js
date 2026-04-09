@@ -35,5 +35,31 @@ export const logoutUser = async () => {
 	}
 }
 
+export const forgotPassword = async (email) => {
+	try {
+		const response = await api.post("/forgot-password", { email })
+		return response.data
+	} catch (err) {
+		throw new Error(
+			err.response?.data?.detail || "Request failed"
+		)
+	}
+}
+
+
+export const resetPassword = async (token, newPassword) => {
+	try {
+		const response = await api.post("/reset-password", {
+			token,
+			new_password: newPassword
+		})
+		return response.data
+	} catch (err) {
+		throw new Error(
+			err.response?.data?.detail || "Reset failed"
+		)
+	}
+}
+
 
 

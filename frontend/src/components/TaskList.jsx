@@ -4,7 +4,7 @@ import toast from "react-hot-toast"
 
 function TaskList({ tasks, onDelete, onUpdate, onEdit }) {
 	if (!tasks.length) {
-		return <p className="empty">No tasks found.</p>
+		return <p className="empty">No tasks yet. Start by adding one.</p>
 	}
 
 	const toggleStatus = async (task) => {

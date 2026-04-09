@@ -19,4 +19,9 @@
   border-radius: 6px;
   color: white;
   cursor: pointer;
+  transition: 0.2s;
+}
+
+.add-task-form button:hover {
+  background-color: #15803d;
 }
