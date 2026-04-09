@@ -5,6 +5,7 @@ import TaskList from "../components/TaskList"
 import { getTasks, deleteTask, getPendingTasks, getOverdueTasks, getCompletedTasks, searchTasks } from "../api/tasks"
 import "./Dashboard.css"
 import EditTaskModal from "../components/EditTaskModal"
+import toast from "react-hot-toast"
 
 function Dashboard() {
 	const [tasks, setTasks] = useState([])
@@ -37,7 +38,7 @@ function Dashboard() {
 		}, 400)
 
 		return () => clearTimeout(delayDebounce)
-	}, [search])
+	}, [search, filter])
 
 	const loadTasks = async (selectedFilter = "all") => {
 		try {
@@ -71,8 +72,10 @@ function Dashboard() {
 
 			setTasks(prev => prev.filter(task => task.id !== id))
 
+			toast.success("Task Deleted")
+
 		} catch (err) {
-			setError("Failed to delete task")
+			toast.error("Failed to delete task")
 		}
 	}
 

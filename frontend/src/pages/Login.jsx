@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { useNavigate, Navigate } from "react-router-dom"
 import { loginUser } from "../api/auth"
+import toast from "react-hot-toast"
 import "./Login.css"
 
 function Login() {
@@ -9,7 +10,6 @@ function Login() {
 	const [email, setEmail] = useState("")
 	const [password, setPassword] = useState("")
 
-	const [error, setError] = useState("")
 	const [loading, setLoading] = useState(false)
 
 	const token = localStorage.getItem("access_token")
@@ -20,7 +20,6 @@ function Login() {
 	const handleSubmit = async (e) => {
 		e.preventDefault()
 
-		setError("")
 		setLoading(true)
 
 		try {
@@ -28,9 +27,11 @@ function Login() {
 
 			localStorage.setItem("access_token", data.access_token)
 
+			toast.success("Logged in Successfully")
+
 			navigate("/dashboard")
 		} catch (err) {
-			setError(err.message)
+			toast.error("Invalid Credentials")
 		} finally {
 			setLoading(false)
 		}
@@ -56,8 +57,6 @@ function Login() {
 					onChange={(e) => setPassword(e.target.value)}
 					required
 				/>
-
-				{error && <p className="error">{error}</p>}
 
 				<button type="submit" disabled={loading}>
 					{loading ? "Logging in..." : "Login"}

@@ -1,13 +1,12 @@
 import { useState } from "react"
 import { createTask } from "../api/tasks"
+import toast from "react-hot-toast"
 import "./AddTask.css"
 
 function AddTask({ onTaskAdded }) {
 	const [title, setTitle] = useState("")
 	const [description, setDescription] = useState("")
 	const [dueDate, setDueDate] = useState("")
-
-	const [error, setError] = useState("")
 
 	const handleSubmit = async (e) => {
 		e.preventDefault()
@@ -21,22 +20,21 @@ function AddTask({ onTaskAdded }) {
 
 			onTaskAdded(newTask)
 
+			toast.success("Task Created")
+
 			setTitle("")
 			setDescription("")
 			setDueDate("")
 
 		} catch (err) {
-				setError("Failed to add task")
-				setTimeout(() => {
-					setError("")
-				}, 3000)
+			toast.error("Failed to add task")
 		}
 	}
 
 	return (
 		<form onSubmit={handleSubmit} className="add-task-form">
 
-			<input 
+			<input
 				type="text"
 				placeholder="Task Title"
 				value={title}
@@ -44,24 +42,23 @@ function AddTask({ onTaskAdded }) {
 				required
 			/>
 
-			<input 
+			<input
 				type="text"
 				placeholder="Description"
 				value={description}
-				onChange={(e) => setDescription(e.target.value)} 
+				onChange={(e) => setDescription(e.target.value)}
 			/>
 
-			<input 
+			<input
 				type="date"
 				value={dueDate}
-				onChange={(e) => {setDueDate(e.target.value)}}
+				onChange={(e) => { setDueDate(e.target.value) }}
 			/>
 
 			<button type="submit">
 				Add Task
 			</button>
 
-			{error && <p style={{ color: "#ef4444" }}>{error}</p>}
 		</form>
 	)
 }

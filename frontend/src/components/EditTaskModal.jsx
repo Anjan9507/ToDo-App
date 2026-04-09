@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { updateTask } from "../api/tasks"
+import toast from "react-hot-toast"
 import "./EditTaskModal.css"
 
 function EditTaskModal({ task, onClose, onUpdate }) {
@@ -7,8 +8,6 @@ function EditTaskModal({ task, onClose, onUpdate }) {
 	const [description, setDescription] = useState(task.description)
 	const [dueDate, setDueDate] = useState(task.due_date.split("T")[0])
 	const [status, setStatus] = useState(task.status)
-
-	const [error, setError] = useState("")
 
 	const handleSubmit = async (e) => {
 		e.preventDefault()
@@ -22,13 +21,11 @@ function EditTaskModal({ task, onClose, onUpdate }) {
 			})
 
 			onUpdate(updatedTask)
+			toast.success("Task Updated")
 			onClose()
 
 		} catch (err) {
-			setError("Failed to update task")
-			setTimeout(() => {
-				setError("")
-			}, 3000)
+			toast.error("Failed to update task")
 		}
 	}
 
@@ -66,8 +63,6 @@ function EditTaskModal({ task, onClose, onUpdate }) {
 						<option value="completed">Completed</option>
 						<option value="overdue">Overdue</option>
 					</select>
-
-					{error && <p style={{ color: "#ef4444" }}>{error}</p>}
 
 					<div className="modal-actions">
 						<button type="submit">

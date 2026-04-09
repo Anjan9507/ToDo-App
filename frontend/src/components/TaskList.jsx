@@ -1,5 +1,6 @@
 import "./TaskList.css"
 import { updateTask } from "../api/tasks"
+import toast from "react-hot-toast"
 
 function TaskList({ tasks, onDelete, onUpdate, onEdit }) {
 	if (!tasks.length) {
@@ -7,13 +8,19 @@ function TaskList({ tasks, onDelete, onUpdate, onEdit }) {
 	}
 
 	const toggleStatus = async (task) => {
-		const newStatus = task.status === "completed" ? "pending" : "completed"
+		try {
+			const newStatus = task.status === "completed" ? "pending" : "completed"
 
-		const updatedTask = await updateTask(task.id, {
-			...task,
-			status: newStatus
-		})
-		onUpdate(updatedTask)
+			const updatedTask = await updateTask(task.id, {
+				...task,
+				status: newStatus
+			})
+			onUpdate(updatedTask)
+			toast.success("Task status updated")
+
+		} catch (err) {
+			toast.error("Status update failed")
+		}
 	}
 
 	return (
