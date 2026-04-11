@@ -27,4 +27,11 @@ celery_app.conf.update(
     result_serializer="json",
     timezone="Asia/Kolkata",
     enable_utc=True,
+
+    beat_schedule={
+        "run-test-task-every-10-seconds": {
+            "task": "app.services.tasks.test_task",
+            "schedule": 10.0,
+        },
+    }
 )
