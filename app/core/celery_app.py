@@ -30,8 +30,8 @@ celery_app.conf.update(
 
     beat_schedule={
         "run-test-task-every-10-seconds": {
-            "task": "app.services.tasks.test_task",
-            "schedule": 10.0,
+            "task": "app.services.tasks.check_due_tasks",
+            "schedule": 60.0,
         },
     }
 )

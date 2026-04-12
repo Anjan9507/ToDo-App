@@ -2,16 +2,19 @@ from fastapi import APIRouter, Depends, HTTPException, status, Response, Request
 from app.schemas.auth_schema import RegisterUser, RegisterUserResponse, LoginUser, TokenResponse, ForgotPassword, ResetPassword
 from app.services import auth_service
 from app.database.db import get_db
+from app.core.rate_limiter import limiter   
 
 router = APIRouter()
 
 @router.post("/register", response_model=RegisterUserResponse, status_code=status.HTTP_201_CREATED)
-def user_register(data: RegisterUser, db=Depends(get_db)):
+@limiter.limit("5/minute")
+def user_register(request: Request, data: RegisterUser, db=Depends(get_db)):
     return auth_service.create_user(db, data)
 
 
 @router.post("/login", response_model=TokenResponse, status_code=status.HTTP_200_OK)
-def user_login(response: Response, data: LoginUser, db=Depends(get_db)):
+@limiter.limit("10/minute")
+def user_login(request: Request, response: Response, data: LoginUser, db=Depends(get_db)):
     try:
         token_data = auth_service.login_user(db, data)
         if not token_data:
@@ -60,7 +63,8 @@ def create_new_access_token(request: Request, db=Depends(get_db)):
     
 
 @router.post("/forgot-password", status_code=status.HTTP_200_OK)
-def forgot_password(data: ForgotPassword, db=Depends(get_db)):
+@limiter.limit("3/minute")
+def forgot_password(request: Request, data: ForgotPassword, db=Depends(get_db)):
     return auth_service.forgot_password(db, data)
 
 
