@@ -16,6 +16,7 @@ def check_due_tasks():
                     tasks.id AS task_id,
                     tasks.title AS task_title,
                     tasks.due_date AS due_date,
+                    users.name AS name,
                     users.phone AS phone
                 FROM tasks
                 JOIN users
@@ -27,9 +28,10 @@ def check_due_tasks():
         
         tasks = cursor.fetchall()
 
-        for task_id, task_title, due_date, phone in tasks:
+        for task_id, task_title, due_date, name, phone in tasks:
             message = f"""
 Reminder 🚨
+Hi {name}
 
 Task: {task_title}
 Due today: {due_date.strftime("%B %d, %Y")}
@@ -41,6 +43,23 @@ Don't forget to complete it!
             cursor.execute("UPDATE tasks SET reminder_sent = TRUE WHERE id = %s", (task_id,))
         db.commit()
 
+    except Exception as e:
+        db.rollback()
+        raise e
+    finally:
+        cursor.close()
+
+
+@celery_app.task
+def update_overdue_tasks():
+    db=next(get_db())
+    cursor = db.cursor()
+
+    try:
+        today = date.today()
+
+        cursor.execute("UPDATE tasks SET status = 'overdue' WHERE due_date < %s AND status = 'pending'", (today,))
+        db.commit()
     except Exception as e:
         db.rollback()
         raise e

@@ -1,4 +1,5 @@
 from celery import Celery
+from celery.schedules import crontab
 import os
 from dotenv import load_dotenv
 import ssl
@@ -13,7 +14,7 @@ celery_app = Celery(
     backend=REDIS_URL
 )
 
-celery_app.autodiscover_tasks(["app.services"])
+celery_app.autodiscover_tasks(["app.workers"])
 
 celery_app.conf.update(
     broker_use_ssl={
@@ -29,9 +30,13 @@ celery_app.conf.update(
     enable_utc=True,
 
     beat_schedule={
-        "run-test-task-every-10-seconds": {
-            "task": "app.services.tasks.check_due_tasks",
+        "check_due_tasks": {
+            "task": "app.workers.tasks.check_due_tasks",
             "schedule": 60.0,
         },
+        "update-overdue-tasks": {
+            "task": "app.workers.tasks.update_overdue_tasks",
+            "schedule": crontab(hour=0, minute=0),
+        }
     }
 )

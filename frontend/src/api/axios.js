@@ -1,4 +1,5 @@
 import axios from "axios"
+import toast from "react-hot-toast"
 
 const api = axios.create({
 	baseURL: "http://localhost:8000",
@@ -24,12 +25,11 @@ api.interceptors.response.use(
   (response) => response,
 
   async (error) => {
-
-    if(!error.response) {
-      return Promise.reject(error)
-    }
-
     const originalRequest = error.config || {}
+
+    if(error.response?.status === 429) {
+      toast.error("Too many attempts. Try again later.")
+    } 
 
     if (
 			error.response?.status === 401 && 
