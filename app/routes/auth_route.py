@@ -28,7 +28,7 @@ def user_login(request: Request, response: Response, data: LoginUser, db=Depends
             value=token_data["refresh_token"],
             httponly=True,
             secure=True,
-            samesite="lax",
+            samesite="none",
             max_age=10*24*60*60
         )
 
