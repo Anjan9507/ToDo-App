@@ -13,6 +13,17 @@
 .add-task-form input[type="date"] {
   color: white;
   background-color: #0f172a;
+  position: relative;
+}
+
+.add-task-form input[type="date"]:before {
+  content: "Select date";
+  color: #64748b;
+  position: absolute;
+}
+
+.add-task-form input[type="date"]:valid:before {
+  content: "";
 }
 
 .add-task-form input[type="date"]::-webkit-calendar-picker-indicator {
