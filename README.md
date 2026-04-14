@@ -73,6 +73,22 @@ REDIS_URL=your_redis_url
 
 ---
 
+---
+
+## 📸 Screenshots
+
+### 🔐 Login Page
+
+![Login](./screenshots/login.png)
+
+### 📊 Dashboard (Desktop)
+
+![Dashboard](./screenshots/dashboard.png)
+
+### 📱 Mobile View
+
+![Mobile](./screenshots/mobile.png)
+
 ## 📌 Future Improvements
 
 - Background jobs using Celery + Redis

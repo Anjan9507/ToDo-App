@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Response, Request
-from app.schemas.auth_schema import RegisterUser, RegisterUserResponse, LoginUser, TokenResponse, ForgotPassword, ResetPassword
-from app.services import auth_service
-from app.database.db import get_db
-from app.core.rate_limiter import limiter   
+from backend.schemas.auth_schema import RegisterUser, RegisterUserResponse, LoginUser, TokenResponse, ForgotPassword, ResetPassword
+from backend.services import auth_service
+from backend.database.db import get_db
+from backend.core.rate_limiter import limiter   
 
 router = APIRouter()
 

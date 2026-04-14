@@ -1,6 +1,6 @@
-from app.core.celery_app import celery_app
-from app.database.db import get_db
-from app.services.whatsapp_service import send_whatsapp_message
+from backend.core.celery_app import celery_app
+from backend.database.db import get_db
+from backend.services.whatsapp_service import send_whatsapp_message
 from datetime import date
 
 @celery_app.task

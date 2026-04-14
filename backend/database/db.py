@@ -1,5 +1,5 @@
 from psycopg2.pool import SimpleConnectionPool
-from app.config import DB_URL
+from backend.config import DB_URL
 
 pool = SimpleConnectionPool(
     1, 10,

@@ -1,12 +1,12 @@
 from passlib.context import CryptContext
 from fastapi import HTTPException
 from psycopg2 import errors
-from app.utils import format_phn_number
+from backend.utils import format_phn_number
 import secrets
 
 from jose import jwt
 from datetime import datetime, timedelta, timezone
-from app.config import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
+from backend.config import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
 
 def create_access_token(data: dict):
     to_encode = data.copy()

@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, status
-from app.services import task_service
-from app.schemas.task_schema import TaskCreate, TaskCreateResponse, TaskUpdate, TaskUpdateResponse
-from app.database.db import get_db
-from app.services.security_service import get_current_user
+from backend.services import task_service
+from backend.schemas.task_schema import TaskCreate, TaskCreateResponse, TaskUpdate, TaskUpdateResponse
+from backend.database.db import get_db
+from backend.services.security_service import get_current_user
 
 router = APIRouter()
 

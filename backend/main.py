@@ -1,9 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routes import task_route, auth_route
+from backend.routes import task_route, auth_route
 
 from slowapi.middleware import SlowAPIMiddleware
-from app.core.rate_limiter import limiter, rate_limit_handler
+from backend.core.rate_limiter import limiter, rate_limit_handler
 from slowapi.errors import RateLimitExceeded
 
 app = FastAPI()
