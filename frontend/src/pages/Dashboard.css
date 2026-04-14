@@ -4,8 +4,20 @@
   gap: 20px;
   padding: 16px;
 
-  max-width: 500px;    
-  margin: 0 auto;       
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .dashboard-container {
+    max-width: 700px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .dashboard-container {
+    max-width: 900px;
+  }
 }
 
 .card {
@@ -13,10 +25,22 @@
   padding: 18px;
   border-radius: 12px;
   border: 1px solid #334155;
+
+  transition: 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-2px);
 }
 
 .card h1 {
-  font-size: 26px;
+  font-size: 24px;
+}
+
+@media (min-width: 768px) {
+  .card h1 {
+    font-size: 32px;
+  }
 }
 
 .card h2 {

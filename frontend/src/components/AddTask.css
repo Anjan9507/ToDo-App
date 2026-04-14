@@ -1,6 +1,6 @@
 .add-task-form {
   display: flex;
-  flex-direction: column;   
+  flex-direction: column;
   gap: 12px;
   margin-top: 15px;
 }
@@ -16,7 +16,7 @@
 }
 
 .add-task-form input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(1);  
+  filter: invert(1);
 }
 
 .add-task-form input {
@@ -51,7 +51,12 @@
     flex: 1;
   }
 
+  .add-task-form input[type="date"] {
+    max-width: 180px;
+  }
+
   .add-task-form button {
     width: auto;
+    padding: 10px 16px;
   }
 }
