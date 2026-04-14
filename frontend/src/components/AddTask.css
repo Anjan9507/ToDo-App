@@ -1,13 +1,19 @@
 .add-task-form {
   display: flex;
+  flex-direction: column;   
   gap: 10px;
   margin-top: 15px;
+}
+
+.add-task-form input,
+.add-task-form button {
+  width: 100%;
 }
 
 .add-task-form input {
   background: #0f172a;
   border: 1px solid #334155;
-  padding: 8px;
+  padding: 10px;
   border-radius: 6px;
   color: white;
 }
@@ -24,4 +30,19 @@
 
 .add-task-form button:hover {
   background-color: #15803d;
+}
+
+@media (min-width: 768px) {
+  .add-task-form {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .add-task-form input {
+    flex: 1;
+  }
+
+  .add-task-form button {
+    width: auto;
+  }
 }
