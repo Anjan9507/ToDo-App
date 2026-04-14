@@ -49,11 +49,15 @@ function AddTask({ onTaskAdded }) {
 				onChange={(e) => setDescription(e.target.value)}
 			/>
 
-			<input
-				type="date"
-				value={dueDate}
-				onChange={(e) => { setDueDate(e.target.value) }}
-			/>
+			<div className="date-group">
+				<label>Due Date</label>
+
+				<input
+					type="date"
+					value={dueDate}
+					onChange={(e) => setDueDate(e.target.value)}
+				/>
+			</div>
 
 			<button type="submit">
 				Add Task
