@@ -1,19 +1,25 @@
 .dashboard-container {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 20px;
+  padding: 16px;           
 }
 
 .card {
   background-color: #1e293b;
-  padding: 20px;
-  border-radius: 10px;
+  padding: 18px;
+  border-radius: 12px;
   border: 1px solid #334155;
+}
+
+.card h1 {
+  font-size: 26px;
 }
 
 .card h2 {
   margin-bottom: 10px;
   color: #e2e8f0;
+  font-size: 20px;
 }
 
 .card p {
@@ -22,8 +28,8 @@
 
 .task-filters {
   display: flex;
+  flex-wrap: wrap;     
   gap: 10px;
-  margin-bottom: 10px;
 }
 
 .task-filters button {

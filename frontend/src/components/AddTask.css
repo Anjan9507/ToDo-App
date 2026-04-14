@@ -1,13 +1,22 @@
 .add-task-form {
   display: flex;
   flex-direction: column;   
-  gap: 10px;
+  gap: 12px;
   margin-top: 15px;
 }
 
 .add-task-form input,
 .add-task-form button {
   width: 100%;
+}
+
+.add-task-form input[type="date"] {
+  color: white;
+  background-color: #0f172a;
+}
+
+.add-task-form input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);  
 }
 
 .add-task-form input {
